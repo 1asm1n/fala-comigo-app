@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "91734753690",
+    "project_id": "test-stacked-firebase",
+    "storage_bucket": "test-stacked-firebase.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91734753690:android:61f9355d01d87a2658ba23",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrMSLr6NN1XwLdwimUxXSaDuHuQkzdMYE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

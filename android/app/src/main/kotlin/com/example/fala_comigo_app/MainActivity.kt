@@ -1,4 +1,4 @@
-package com.example.fala_comigo_app
+package com.example.app
 
 import io.flutter.embedding.android.FlutterActivity
 

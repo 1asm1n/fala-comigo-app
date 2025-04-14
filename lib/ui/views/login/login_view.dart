@@ -1,4 +1,4 @@
-import 'package:fala_comigo_app/app/app.router.dart';
+//import 'package:fala_comigo_app/app/app.router.dart';
 import 'package:fala_comigo_app/ui/views/cadastro/cadastro_view.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -13,9 +13,9 @@ class LoginView extends StackedView<LoginViewModel> {
     LoginViewModel viewModel,
     Widget? child,
   ) {
-    final Color backgroundColor = const Color(0xFFFFF0F3);
-    final Color primaryColor = const Color(0xFFFFCDD2);
-    final Color accentColor = const Color(0xFFF8BBD0);
+    const Color backgroundColor = Color(0xFFFFF0F3);
+    const Color primaryColor = Color(0xFFFFCDD2);
+    const Color accentColor = Color(0xFFF8BBD0);
 
     return Scaffold(
       backgroundColor: backgroundColor,

@@ -11,9 +11,9 @@ class CadastroView extends StackedView<CadastroViewModel> {
     CadastroViewModel viewModel,
     Widget? child,
   ) {
-    final Color backgroundColor = const Color(0xFFFFF0F3); // Rosa pastel claro
-    final Color primaryColor = const Color(0xFFFFCDD2); // Vermelho claro
-    final Color accentColor = const Color(0xFFF8BBD0); // Rosa pastel suave
+    const Color backgroundColor = Color(0xFFFFF0F3); // Rosa pastel claro
+    const Color primaryColor = Color(0xFFFFCDD2); // Vermelho claro
+    const Color accentColor = Color(0xFFF8BBD0); // Rosa pastel suave
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -47,6 +47,9 @@ class CadastroView extends StackedView<CadastroViewModel> {
               ),
               const SizedBox(height: 20),
               TextField(
+                controller: viewModel
+                    .emailController, //pegando o email, para acessar coisas da viewmodel sempre preciso de um viewmodel.alguma coisa
+
                 onChanged: (value) => viewModel.email = value,
                 decoration: InputDecoration(
                   hintText: 'E-mail',
@@ -85,6 +88,7 @@ class CadastroView extends StackedView<CadastroViewModel> {
               if (!viewModel.menorDeIdade) ...[
                 const SizedBox(height: 20),
                 TextField(
+                  controller: viewModel.passwordController,
                   obscureText: true,
                   onChanged: (value) => viewModel.senha = value,
                   decoration: InputDecoration(
@@ -100,14 +104,16 @@ class CadastroView extends StackedView<CadastroViewModel> {
                 ),
                 const SizedBox(height: 30),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: viewModel.cadastrar,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: accentColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 60, vertical: 15),
+                      horizontal: 60,
+                      vertical: 15,
+                    ),
                   ),
                   child: const Text(
                     'Cadastrar',
