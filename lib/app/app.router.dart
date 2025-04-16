@@ -18,7 +18,7 @@ import 'package:stacked_services/stacked_services.dart' as _i8;
 class Routes {
   static const homeView = '/home-view';
 
-  static const startupView = '/startup-view';
+  static const startupView = '/';
 
   static const loginView = '/login-view';
 
@@ -85,8 +85,10 @@ class StackedRouter extends _i1.RouterBase {
       );
     },
     _i6.ChatView: (data) {
+      final args = data.getArgs<ChatViewArguments>(nullOk: false);
       return _i7.MaterialPageRoute<dynamic>(
-        builder: (context) => const _i6.ChatView(),
+        builder: (context) =>
+            _i6.ChatView(key: args.key, otherUserId: args.otherUserId),
         settings: data,
       );
     },
@@ -97,6 +99,33 @@ class StackedRouter extends _i1.RouterBase {
 
   @override
   Map<Type, _i1.StackedRouteFactory> get pagesMap => _pagesMap;
+}
+
+class ChatViewArguments {
+  const ChatViewArguments({
+    this.key,
+    required this.otherUserId,
+  });
+
+  final _i7.Key? key;
+
+  final String otherUserId;
+
+  @override
+  String toString() {
+    return '{"key": "$key", "otherUserId": "$otherUserId"}';
+  }
+
+  @override
+  bool operator ==(covariant ChatViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.key == key && other.otherUserId == otherUserId;
+  }
+
+  @override
+  int get hashCode {
+    return key.hashCode ^ otherUserId.hashCode;
+  }
 }
 
 extension NavigatorStateExtension on _i8.NavigationService {
@@ -156,14 +185,17 @@ extension NavigatorStateExtension on _i8.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToChatView([
+  Future<dynamic> navigateToChatView({
+    _i7.Key? key,
+    required String otherUserId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
+  }) async {
     return navigateTo<dynamic>(Routes.chatView,
+        arguments: ChatViewArguments(key: key, otherUserId: otherUserId),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -226,14 +258,17 @@ extension NavigatorStateExtension on _i8.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> replaceWithChatView([
+  Future<dynamic> replaceWithChatView({
+    _i7.Key? key,
+    required String otherUserId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
+  }) async {
     return replaceWith<dynamic>(Routes.chatView,
+        arguments: ChatViewArguments(key: key, otherUserId: otherUserId),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
