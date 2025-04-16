@@ -1,36 +1,38 @@
-import 'package:fala_comigo_app/app/app.bottomsheets.dart';
-import 'package:fala_comigo_app/app/app.dialogs.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fala_comigo_app/app/app.locator.dart';
-import 'package:fala_comigo_app/ui/common/app_strings.dart';
+import 'package:fala_comigo_app/app/app.router.dart';
+import 'package:fala_comigo_app/models/chatUserModel';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class HomeViewModel extends BaseViewModel {
-  final _dialogService = locator<DialogService>();
-  final _bottomSheetService = locator<BottomSheetService>();
+  List<ChatUserModel> _chats = [];
+  List<ChatUserModel> get chats => _chats;
 
-  String get counterLabel => 'Counter is: $_counter';
-
-  int _counter = 0;
-
-  void incrementCounter() {
-    _counter++;
-    rebuildUi();
+  final String _currentUserId = FirebaseAuth.instance.currentUser!.uid;
+  final _navigationService = locator<NavigationService>();
+  HomeViewModel() {
+    fetchUsers();
   }
 
-  void showDialog() {
-    _dialogService.showCustomDialog(
-      variant: DialogType.infoAlert,
-      title: 'Stacked Rocks!',
-      description: 'Give stacked $_counter stars on Github',
-    );
+  void logout() {
+    _navigationService.replaceWithCadastroView();
   }
 
-  void showBottomSheet() {
-    _bottomSheetService.showCustomSheet(
-      variant: BottomSheetType.notice,
-      title: ksHomeBottomSheetTitle,
-      description: ksHomeBottomSheetDescription,
-    );
+  Future<void> fetchUsers() async {
+    setBusy(true);
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance.collection('users').get();
+
+      _chats = snapshot.docs
+          .where((doc) => doc.id != _currentUserId)
+          .map((doc) => ChatUserModel.fromMap(doc.data(), doc.id))
+          .toList();
+    } catch (e) {
+      print('Erro ao buscar usuários: $e');
+    }
+    setBusy(false);
   }
 }

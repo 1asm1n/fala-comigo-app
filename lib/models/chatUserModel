@@ -1,0 +1,30 @@
+class ChatUserModel {
+  final String id;
+  final String nome;
+  final String email;
+  final String avatarUrl;
+
+  ChatUserModel({
+    required this.id,
+    required this.nome,
+    required this.email,
+    required this.avatarUrl,
+  });
+
+  factory ChatUserModel.fromMap(Map<String, dynamic> data, String docId) {
+    return ChatUserModel(
+      id: docId,
+      nome: data['nome'] ?? '',
+      email: data['email'] ?? '',
+      avatarUrl: data['avatarUrl'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'nome': nome,
+      'email': email,
+      'avatarUrl': avatarUrl,
+    };
+  }
+}

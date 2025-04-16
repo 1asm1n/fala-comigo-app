@@ -6,6 +6,7 @@ import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:fala_comigo_app/ui/views/login/login_view.dart';
 import 'package:fala_comigo_app/ui/views/cadastro/cadastro_view.dart';
+import 'package:fala_comigo_app/ui/views/chat/chat_view.dart';
 // @stacked-import
 
 @StackedApp(
@@ -14,6 +15,7 @@ import 'package:fala_comigo_app/ui/views/cadastro/cadastro_view.dart';
     MaterialRoute(page: StartupView),
     MaterialRoute(page: LoginView),
     MaterialRoute(page: CadastroView),
+    MaterialRoute(page: ChatView),
 // @stacked-route
   ],
   dependencies: [

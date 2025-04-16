@@ -35,19 +35,8 @@ class LoginView extends StackedView<LoginViewModel> {
               ),
               const SizedBox(height: 30),
               TextField(
-                decoration: InputDecoration(
-                  hintText: 'Nome',
-                  filled: true,
-                  fillColor: Colors.white,
-                  prefixIcon: const Icon(Icons.person),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
+                controller: viewModel
+                    .emailController, // verificando o email com um controller
                 decoration: InputDecoration(
                   hintText: 'E-mail',
                   filled: true,
@@ -59,9 +48,26 @@ class LoginView extends StackedView<LoginViewModel> {
                   ),
                 ),
               ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: viewModel
+                    .passwordController, // verificando a senha com um controller
+                obscureText: true,
+                decoration: InputDecoration(
+                  hintText: 'Senha',
+                  filled: true,
+                  fillColor: Colors.white,
+                  prefixIcon: const Icon(Icons.lock),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
               const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: viewModel
+                    .login, // chamando o emtodoo de login na hora de apertar o botao
                 style: ElevatedButton.styleFrom(
                   backgroundColor: accentColor,
                   shape: RoundedRectangleBorder(

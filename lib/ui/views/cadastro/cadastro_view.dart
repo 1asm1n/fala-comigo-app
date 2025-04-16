@@ -11,9 +11,9 @@ class CadastroView extends StackedView<CadastroViewModel> {
     CadastroViewModel viewModel,
     Widget? child,
   ) {
-    const Color backgroundColor = Color(0xFFFFF0F3); // Rosa pastel claro
-    const Color primaryColor = Color(0xFFFFCDD2); // Vermelho claro
-    const Color accentColor = Color(0xFFF8BBD0); // Rosa pastel suave
+    const Color backgroundColor = Color(0xFFFFF0F3);
+    const Color primaryColor = Color(0xFFFFCDD2);
+    const Color accentColor = Color(0xFFF8BBD0);
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -33,7 +33,7 @@ class CadastroView extends StackedView<CadastroViewModel> {
               ),
               const SizedBox(height: 30),
               TextField(
-                onChanged: (value) => viewModel.nome = value,
+                controller: viewModel.nomeController,
                 decoration: InputDecoration(
                   hintText: 'Nome',
                   filled: true,
@@ -47,10 +47,7 @@ class CadastroView extends StackedView<CadastroViewModel> {
               ),
               const SizedBox(height: 20),
               TextField(
-                controller: viewModel
-                    .emailController, //pegando o email, para acessar coisas da viewmodel sempre preciso de um viewmodel.alguma coisa
-
-                onChanged: (value) => viewModel.email = value,
+                controller: viewModel.emailController,
                 decoration: InputDecoration(
                   hintText: 'E-mail',
                   filled: true,
@@ -64,10 +61,9 @@ class CadastroView extends StackedView<CadastroViewModel> {
               ),
               const SizedBox(height: 20),
               TextField(
+                controller: viewModel.idadeController,
                 keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  viewModel.setIdade(value);
-                },
+                onChanged: viewModel.setIdade,
                 decoration: InputDecoration(
                   hintText: 'Idade',
                   filled: true,
@@ -90,7 +86,6 @@ class CadastroView extends StackedView<CadastroViewModel> {
                 TextField(
                   controller: viewModel.passwordController,
                   obscureText: true,
-                  onChanged: (value) => viewModel.senha = value,
                   decoration: InputDecoration(
                     hintText: 'Senha',
                     filled: true,
