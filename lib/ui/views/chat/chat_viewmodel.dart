@@ -62,6 +62,5 @@ class ChatViewModel extends BaseViewModel {
   // Atualizar mensagem digitada
   void updateMessage(String val) {
     message = val;
-    notifyListeners();
   }
 }

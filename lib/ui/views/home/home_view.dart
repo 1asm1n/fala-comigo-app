@@ -50,8 +50,8 @@ class HomeView extends StackedView<HomeViewModel> {
                 onTap: () {
                   // Navega para a tela de chat, passando o ID do usuário
                   locator<NavigationService>().navigateToChatView(
-                    otherUserId: user[
-                        'uid'], // Corrigido para usar o parâmetro 'otherUserId'
+                    otherUserId: user['uid'], nome: user['nome'],
+                    // Corrigido para usar o parâmetro 'otherUserId'
                   );
                 },
               );
