@@ -3,13 +3,13 @@ import 'package:fala_comigo_app/app/app.locator.dart';
 import 'package:fala_comigo_app/app/app.router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class CadastroViewModel extends BaseViewModel {
   final _navigationService = locator<NavigationService>();
 
-  // Controllers para pegar as infos do teclado
   TextEditingController nomeController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -33,28 +33,55 @@ class CadastroViewModel extends BaseViewModel {
         password: passwordController.text,
       );
 
-      // Salvar dados no Firestore
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(credential.user!.uid)
-          .set({
-        'nome': nomeController.text.trim(),
-        'email': emailController.text.trim(),
-        'idade': idade,
-        'menorDeIdade': menorDeIdade,
-        'avatarUrl':
-            'https://api.dicebear.com/7.x/initials/svg?seed=${nomeController.text.trim().replaceAll(' ', '+')}',
-      });
-
+      await _salvarDadosUsuario(credential.user!);
       _navigationService.replaceWithHomeView();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        print('Senha muito fraca.');
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        print('Email já está em uso.');
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<void> loginComGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) return; // usuário cancelou
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      await _salvarDadosUsuario(userCredential.user!);
+      _navigationService.replaceWithHomeView();
+    } catch (e) {
+      print("Erro no login com Google: $e");
+    }
+  }
+
+  Future<void> _salvarDadosUsuario(User user) async {
+    final doc = FirebaseFirestore.instance.collection('users').doc(user.uid);
+    final snapshot = await doc.get();
+
+    if (!snapshot.exists) {
+      await doc.set({
+        'nome': user.displayName ?? nomeController.text.trim(),
+        'email': user.email,
+        'idade': idade,
+        'menorDeIdade': menorDeIdade,
+        'avatarUrl': user.photoURL ??
+            'https://api.dicebear.com/7.x/initials/svg?seed=${user.displayName?.replaceAll(' ', '+') ?? 'User'}',
+      });
     }
   }
 

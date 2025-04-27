@@ -15,61 +15,76 @@ class HomeView extends StackedView<HomeViewModel> {
         title: const Text("Chats"),
         backgroundColor: const Color.fromARGB(255, 230, 160, 183),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              _logout(viewModel); // Chama o método de logout
-            },
-          ),
+          if (viewModel.currentUser != null)
+            IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: () {
+                _logout(viewModel);
+              },
+            ),
         ],
       ),
-      body: StreamBuilder<List<Map<String, dynamic>>>(
-        // StreamBuilder para ouvir mudanças nos usuários
-        stream: viewModel.otherUsersStream,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator()); // Loading
-          }
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-                child: Text("Nenhum usuário encontrado")); // Sem dados
-          }
-
-          final users = snapshot.data!; // Lista de usuários
-          return ListView.builder(
-            itemCount: users.length,
-            itemBuilder: (context, index) {
-              final user = users[index];
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(user['avatarUrl'] ??
-                      ''), // Corrigido com valor padrão caso não tenha URL
+      body: viewModel.currentUser == null
+          ? Center(
+              child: ElevatedButton.icon(
+                onPressed: () => viewModel.loginWithGoogle(),
+                icon: const Icon(Icons.login),
+                label: const Text('Entrar com Google'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 255, 188, 214),
+                  foregroundColor: Colors.black,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 ),
-                title: Text(user['nome'] ??
-                    'Sem nome'), // Corrigido com valor padrão caso não tenha nome
-                onTap: () {
-                  // Navega para a tela de chat, passando o ID do usuário
-                  locator<NavigationService>().navigateToChatView(
-                    otherUserId: user['uid'], nome: user['nome'],
-                    // Corrigido para usar o parâmetro 'otherUserId'
-                  );
-                },
-              );
-            },
-          );
-        },
-      ),
+              ),
+            )
+          : StreamBuilder<List<Map<String, dynamic>>>(
+              stream: viewModel.otherUsersStream,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text("Nenhum usuário encontrado"));
+                }
+
+                final users = snapshot.data!;
+                return ListView.builder(
+                  itemCount: users.length,
+                  itemBuilder: (context, index) {
+                    final user = users[index];
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: user['isBot'] == true
+                            ? const AssetImage('assets/images/bot_icon.png')
+                            : NetworkImage(user['avatarUrl'] ?? '')
+                                as ImageProvider,
+                        child:
+                            user['isBot'] == true && user['avatarUrl'] == null
+                                ? const Icon(Icons.smart_toy)
+                                : null,
+                      ),
+                      title: Text(user['nome']),
+                      subtitle: user['isBot'] == true
+                          ? const Text("Assistente virtual")
+                          : null,
+                      trailing: user['isBot'] == true
+                          ? const Icon(Icons.smart_toy, color: Colors.green)
+                          : null,
+                      onTap: () => viewModel.navigateToChat(user),
+                    );
+                  },
+                );
+              },
+            ),
     );
   }
 
   @override
-  HomeViewModel viewModelBuilder(BuildContext context) =>
-      HomeViewModel(); // Builder do ViewModel
+  HomeViewModel viewModelBuilder(BuildContext context) => HomeViewModel();
 
-  // Método para logout
   void _logout(HomeViewModel viewModel) async {
-    viewModel.logout(); // Chama o método de logout no ViewModel
-    locator<NavigationService>()
-        .navigateTo(Routes.cadastroView); // Redireciona para a tela de cadastro
+    viewModel.logout();
+    locator<NavigationService>().navigateTo(Routes.cadastroView);
   }
 }

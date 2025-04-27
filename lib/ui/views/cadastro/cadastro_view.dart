@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
 import 'cadastro_viewmodel.dart';
 
@@ -114,6 +115,21 @@ class CadastroView extends StackedView<CadastroViewModel> {
                     'Cadastrar',
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: viewModel.loginComGoogle,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 15),
+                    elevation: 2,
+                  ),
+                  child: SvgPicture.asset(
+                      'fala_comigo_app/lib/assets/icons/google.svg'),
                 ),
               ],
             ],

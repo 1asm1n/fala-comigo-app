@@ -22,10 +22,29 @@ class ChatView extends StackedView<ChatViewModel> {
     Widget? child,
   ) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFCEEF1), // Fundo rosado claro
+      backgroundColor: const Color(0xFFFCEEF1),
       appBar: AppBar(
         backgroundColor: const Color(0xFFE6A0B7),
-        title: Text(nome),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(nome),
+            StreamBuilder<DocumentSnapshot>(
+              stream: viewModel.getOtherUserStream(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData || snapshot.data?.data() == null)
+                  return const SizedBox.shrink();
+                final data = snapshot.data!.data() as Map<String, dynamic>;
+                final lastSeen = data['lastSeen'] as Timestamp?;
+                final status = viewModel.getLastSeenStatus(lastSeen);
+                return Text(
+                  status,
+                  style: const TextStyle(fontSize: 12, color: Colors.white70),
+                );
+              },
+            ),
+          ],
+        ),
       ),
       body: Column(
         children: [
@@ -33,10 +52,6 @@ class ChatView extends StackedView<ChatViewModel> {
             child: StreamBuilder<QuerySnapshot>(
               stream: viewModel.getMessagesStream(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
                 if (snapshot.hasError) {
                   return const Center(
                       child: Text('Erro ao carregar mensagens.'));
@@ -53,6 +68,7 @@ class ChatView extends StackedView<ChatViewModel> {
                     final senderId = messageData['senderId'] ?? '';
                     final text = messageData['text'] ?? '';
                     final timestamp = messageData['timestamp'] as Timestamp?;
+                    final isRead = messageData['isRead'] == true;
                     final isMe = senderId == viewModel.currentUserId;
 
                     return Align(
@@ -67,8 +83,8 @@ class ChatView extends StackedView<ChatViewModel> {
                             maxWidth: MediaQuery.of(context).size.width * 0.75),
                         decoration: BoxDecoration(
                           color: isMe
-                              ? const Color(0xFFFADADD) // Rosa pastel claro
-                              : const Color(0xFFF5E1E9), // Rosa bem suave
+                              ? const Color(0xFFFADADD)
+                              : const Color(0xFFF5E1E9),
                           borderRadius: BorderRadius.only(
                             topLeft: const Radius.circular(16),
                             topRight: const Radius.circular(16),
@@ -86,21 +102,28 @@ class ChatView extends StackedView<ChatViewModel> {
                             Text(
                               text,
                               style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.black87,
+                                  fontSize: 16, color: Colors.black87),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    _formatTimestamp(timestamp),
+                                    style: const TextStyle(
+                                        fontSize: 12, color: Colors.grey),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  if (isMe)
+                                    Icon(
+                                      isRead ? Icons.done_all : Icons.done_all,
+                                      size: 16,
+                                      color: isRead ? Colors.red : Colors.grey,
+                                    ),
+                                ],
                               ),
                             ),
-                            if (timestamp != null)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 4),
-                                child: Text(
-                                  _formatTimestamp(timestamp),
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
                           ],
                         ),
                       ),
@@ -148,7 +171,8 @@ class ChatView extends StackedView<ChatViewModel> {
   ChatViewModel viewModelBuilder(BuildContext context) =>
       ChatViewModel()..initialize(otherUserId);
 
-  String _formatTimestamp(Timestamp timestamp) {
+  String _formatTimestamp(Timestamp? timestamp) {
+    if (timestamp == null) return '';
     final date = timestamp.toDate();
     return "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
   }
