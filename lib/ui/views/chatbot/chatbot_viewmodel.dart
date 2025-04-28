@@ -9,7 +9,7 @@ class ChatbotViewModel extends BaseViewModel {
   final String _apiToken = dotenv.env['HF_API_KEY']!;
   final String _apiUrl = dotenv.env['HF_MODEL_URL']!;
 
-  List<Map<String, String>> _messages = [];
+  final List<Map<String, String>> _messages = [];
   List<Map<String, String>> get messages => _messages;
 
   Future<void> sendMessage(String userMessage) async {
@@ -28,6 +28,9 @@ class ChatbotViewModel extends BaseViewModel {
     });
     notifyListeners();
 
+//todo: na requisicao, colocar o historico da conversa ao inves de só a ultiam mensagem, para implementar o modelo
+//em TODAS as requisições o primeiro prompt deve ser a implementação do modelo (finja que você é o taskito blablabla)
+//todo: criar modelo taskito (que da sugestoes de tarefas para os pais)
     try {
       final response = await http.post(
         Uri.parse('https://openrouter.ai/api/v1/chat/completions'),
@@ -36,18 +39,10 @@ class ChatbotViewModel extends BaseViewModel {
           'Content-Type': 'application/json',
           'Accept': '*/*',
         },
-        /* body: jsonEncode({
-          'inputs': userMessage,
-          'parameters': {
-            'temperature': 0.7,
-            'max_new_tokens': 300,
-          }
-        }),*/
-
         body: jsonEncode({
           "model": "openai/gpt-3.5-turbo",
           "messages": [
-            {"role": "user", "content": "What is the meaning of life?"}
+            {"role": "user", "content": userMessage}
           ]
         }),
       );
@@ -56,11 +51,8 @@ class ChatbotViewModel extends BaseViewModel {
       }
       if (response.statusCode == 200) {
         final decoded = jsonDecode(utf8.decode(response.bodyBytes));
-
-        final generatedText = decoded['generated_text'] ??
-            (decoded is List && decoded.isNotEmpty
-                ? decoded[0]['generated_text']
-                : "Resposta não disponível.");
+//content = response["choices"][0]["message"]["content"]
+        final generatedText = decoded['choices'][0]["message"]["content"];
 
         // Remove o "Escrevendo..." antes
         if (_messages.isNotEmpty && _messages.last['text'] == 'Escrevendo...') {
