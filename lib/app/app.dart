@@ -18,12 +18,12 @@ import '../firebase_options.dart';
 
 @StackedApp(
   routes: [
-    MaterialRoute(page: HomeView, name: 'home'),
-    MaterialRoute(page: StartupView, initial: true),
-    MaterialRoute(page: LoginView, name: 'login'),
-    MaterialRoute(page: CadastroView, name: 'cadastro'),
-    MaterialRoute(page: ChatView, path: '/chat-view'),
-    MaterialRoute(page: ChatbotView, name: 'chatbot'),
+    MaterialRoute(page: HomeView),
+    MaterialRoute(page: StartupView),
+    MaterialRoute(page: LoginView),
+    MaterialRoute(page: CadastroView),
+    MaterialRoute(page: ChatView),
+    MaterialRoute(page: ChatbotView),
   ],
   dependencies: [
     LazySingleton(classType: BottomSheetService),

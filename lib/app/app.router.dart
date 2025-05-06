@@ -18,10 +18,15 @@ import 'package:stacked_services/stacked_services.dart' as _i9;
 
 class Routes {
   static const homeView = '/home-view';
-  static const startupView = '/';
+
+  static const startupView = '/startup-view';
+
   static const loginView = '/login-view';
+
   static const cadastroView = '/cadastro-view';
+
   static const chatView = '/chat-view';
+
   static const chatbotView = '/chatbot-view';
 
   static const all = <String>{
@@ -30,7 +35,7 @@ class Routes {
     loginView,
     cadastroView,
     chatView,
-    chatbotView, // Adicionado aqui
+    chatbotView,
   };
 }
 

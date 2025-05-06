@@ -1,5 +1,6 @@
 //import 'package:fala_comigo_app/app/app.router.dart';
 import 'package:fala_comigo_app/ui/views/cadastro/cadastro_view.dart';
+import 'package:fala_comigo_app/ui/views/todo/todo_view.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'login_viewmodel.dart';
@@ -96,6 +97,25 @@ class LoginView extends StackedView<LoginViewModel> {
                     },
                     child: Text(
                       "Cadastre-se",
+                      style: TextStyle(color: primaryColor),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("App de"),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TodoView()),
+                      );
+                    },
+                    child: Text(
+                      "To-do",
                       style: TextStyle(color: primaryColor),
                     ),
                   ),
