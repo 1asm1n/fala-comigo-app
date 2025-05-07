@@ -60,7 +60,7 @@ class FormSheet extends StackedView<FormSheetModel> {
               const SizedBox(height: 16),
               // botão de adicionar tarefa
               ElevatedButton(
-                onPressed: () => viewModel.onAddTodo(context),
+                onPressed: viewModel.onAddTodo,
                 child: const Text('Adicionar tarefa'),
               ),
             ],

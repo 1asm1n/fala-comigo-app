@@ -4,12 +4,6 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class FormSheetModel extends BaseViewModel {
-  // lista de tarefas
-  final List<TodoModel> _todos = [];
-
-  // getter pra lista
-  List<TodoModel> get todos => _todos;
-
   // controllers p pegar os dados dos campos de texto
   final titleTEC = TextEditingController();
   final descriptionTEC = TextEditingController();
@@ -24,7 +18,7 @@ class FormSheetModel extends BaseViewModel {
   FormSheetModel(this.completer);
 
   // add tarefa nova
-  void onAddTodo(BuildContext context) {
+  void onAddTodo() {
     // verifica se o form eh valido
     if (!formKey.currentState!.validate()) return;
 
@@ -35,18 +29,7 @@ class FormSheetModel extends BaseViewModel {
     );
 
     // chama o completer p passar a tarefa p a view principal
-    completer?.call(SheetResponse(confirmed: true, data: newTodo));
-
-    // limpa os campos do form
-    clearFormFields();
-
-    // notifica os listeners p atualizar a view
-    notifyListeners();
-  }
-
-  //limpa os campos do formulário
-  void clearFormFields() {
-    titleTEC.clear();
-    descriptionTEC.clear();
+    completer!(SheetResponse(confirmed: true, data: newTodo));
+    //nao precisa limpar os campos porque o completer ja destroi tudo quando fecha o bottomsheet
   }
 }
