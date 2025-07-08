@@ -36,6 +36,7 @@ class LoginView extends StackedView<LoginViewModel> {
               ),
               const SizedBox(height: 30),
               TextField(
+                key: const Key('login_email_field'),
                 controller: viewModel
                     .emailController, // verificando o email com um controller
                 decoration: InputDecoration(
@@ -51,6 +52,7 @@ class LoginView extends StackedView<LoginViewModel> {
               ),
               const SizedBox(height: 20),
               TextField(
+                key: const Key('login_password_field'),
                 controller: viewModel
                     .passwordController, // verificando a senha com um controller
                 obscureText: true,
@@ -67,6 +69,7 @@ class LoginView extends StackedView<LoginViewModel> {
               ),
               const SizedBox(height: 30),
               ElevatedButton(
+                key: const Key('login_button'),
                 onPressed: viewModel
                     .login, // chamando o emtodoo de login na hora de apertar o botao
                 style: ElevatedButton.styleFrom(
